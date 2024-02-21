@@ -3,10 +3,8 @@ package com.heo.springboot.myfirstwebapp.todo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
-=======
+
 import java.util.function.Predicate;
->>>>>>> ee5f0a06e3a6c7c8fd2e66c219a191f96abdf4dc
 
 import org.springframework.stereotype.Service;
 
