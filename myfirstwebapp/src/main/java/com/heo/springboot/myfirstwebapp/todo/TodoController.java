@@ -50,7 +50,12 @@ public class TodoController {
 		// 새로운 todo 등록 시 길이 제한 두기로 했었다. 어떻게? @Valid와 BindingResult 사용
 		
 		if(result.hasErrors()) {
+<<<<<<< HEAD
 			return "todos"; // todos.jsp에 form:errors로 에러 띄우기
+=======
+			// 에러메시지 추가 필요
+			return "todos";
+>>>>>>> ee5f0a06e3a6c7c8fd2e66c219a191f96abdf4dc
 		}
 			todo.setUsername((String)model.get("name"));
 		// 검증 절차 필요
