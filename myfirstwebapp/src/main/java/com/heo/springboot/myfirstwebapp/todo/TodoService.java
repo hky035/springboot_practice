@@ -20,9 +20,10 @@ public class TodoService {
 
 	public List<Todo> findByUsername(String username) {
 
-		// 로직 작성 필요
-
-		return todos;
+		Predicate<? super Todo> predicate = todo -> todo.getUsername().equalsIgnoreCase(username);
+		
+		return todos.stream()
+				.filter(predicate).toList();
 	}
 
 	public void addTodo(Todo todo) {

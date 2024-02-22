@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -29,15 +31,21 @@ public class TodoController {
 	
 	@RequestMapping("list-todos")
 	public String todolist(ModelMap model) {
-		List<Todo> todos = todoService.findByUsername("Kim");
+		String username = getLoggedInUsername(model);
+		List<Todo> todos = todoService.findByUsername(username);
 		model.addAttribute("todos",todos); // 우선은 하드코딩
 	
 		return "listTodos";
 	}
 	
+	private String getLoggedInUsername(ModelMap model) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			return authentication.getName();
+	}
+
 	@RequestMapping(value = "add-todo", method = RequestMethod.GET)
 	public String gotoAddTodoPage(ModelMap model) {	
-		String username = (String)model.get("name"); // loginController에서 모델에 담긴 name이 세션에 저장
+		String username = getLoggedInUsername(model); // loginController에서 모델에 담긴 name이 세션에 저장
 		// todos.jsp에서 model.Attribute="todo"로 model에 todo키를 가진 Todo 객체가 담겨있어야야 사용 가능함
 		Todo todo = new Todo(0,username," ",LocalDate.now(),false);
 		model.put("todo", todo);
@@ -90,7 +98,7 @@ public class TodoController {
 		}
 		// 성공시
 		
-		String username = (String)model.get("name");
+		String username = getLoggedInUsername(model);
 		todo.setUsername(username);
 		todoService.updateTodo(todo);
 		return "redirect:list-todos";
