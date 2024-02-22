@@ -1,14 +1,17 @@
 package com.heo.springboot.myfirstwebapp.security;
 
 import java.util.function.Function;
+import static org.springframework.security.config.Customizer.*;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SpringSecurityConfiguration {
@@ -44,4 +47,17 @@ public class SpringSecurityConfiguration {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+	@Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        		http.authorizeHttpRequests(
+        				authorize -> authorize
+                        .anyRequest().authenticated())
+                .formLogin(withDefaults()) // 여기까지가 기본 설정
+                .csrf(csrf -> csrf.disable()) // 여기서부터 우리가 추가했어야할 2가지 기능
+                .headers(headers -> headers.frameOptions(options -> options.disable()));
+ 
+        return http.build();
+    }
 }
+
