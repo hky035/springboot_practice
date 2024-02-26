@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.catalina.authenticator.SavedRequest;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,13 +25,17 @@ public class UserDaoService {
 	public User findOne(Integer id) {
 		return users.stream()
 				.filter(user -> user.getId().equals(id))
-				.findAny().get();
+				.findAny().orElse(null);
 	}
 	
 	public User save(User user) {
 		user.setId(++countUser);
 		users.add(user);
 		return user;
+	}
+	
+	public void deleteById(Integer id) {
+		users.removeIf(user-> user.getId().equals(id));
 	}
 	
 }
