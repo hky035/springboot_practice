@@ -3,6 +3,9 @@ package com.heo.rest.webservice.restfulwebservice.user;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,13 +35,18 @@ public class UserResource {
 	}
 	
 	@GetMapping("/users/{id}")
-	public User showUserById(@PathVariable Integer id) {
+	public EntityModel<User> showUserById(@PathVariable Integer id) {
 		User user = service.findOne(id);
 		
 		if(user == null)
 			throw new UserNotFoundException("id:"+id);
 		
-		return service.findOne(id);
+		EntityModel<User> entityModel = EntityModel.of(user); // EntityModel 생성
+		
+		WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).showAllUsers());
+		entityModel.add(link.withRel("all-users"));
+		
+		return entityModel;
 	}
 	
 	@PostMapping("/users")
