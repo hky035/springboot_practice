@@ -2,6 +2,7 @@ package com.heo.rest.webservice.restfulwebservice.user;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -17,31 +18,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.validation.Valid;
 
-//@RestController
-public class UserResource {
+@RestController
+public class UserJpaResource {
 	
-	UserDaoService service;
+	private UserRepository userRepository;
 	
-	public UserResource(UserDaoService service) {
+	public UserJpaResource(UserRepository userRepository) {
 		super();
-		this.service = service;
+		this.userRepository = userRepository;
 	}
 
 
 
-	@GetMapping("/users")
+	@GetMapping("/jpa/users")
 	public List<User> showAllUsers(){
-		return service.findAll();
+		return userRepository.findAll();
 	}
 	
-	@GetMapping("/users/{id}")
+	@GetMapping("/jpa/users/{id}")
 	public EntityModel<User> showUserById(@PathVariable Integer id) {
-		User user = service.findOne(id);
+		Optional<User> user = userRepository.findById(id);
 		
-		if(user == null)
+		if(user.isEmpty())
 			throw new UserNotFoundException("id:"+id);
 		
-		EntityModel<User> entityModel = EntityModel.of(user); // EntityModel 생성
+		EntityModel<User> entityModel = EntityModel.of(user.get()); // EntityModel 생성
 		
 		WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).showAllUsers());
 		entityModel.add(link.withRel("all-users"));
@@ -49,9 +50,9 @@ public class UserResource {
 		return entityModel;
 	}
 	
-	@PostMapping("/users")
+	@PostMapping("/jpa/users")
 	public ResponseEntity<User> addNewUser(@Valid @RequestBody User user) {
-		User savedUser = service.save(user);
+		User savedUser = userRepository.save(user);
 		URI location = ServletUriComponentsBuilder
 								.fromCurrentRequestUri()
 								.path("/{id}")
@@ -61,8 +62,8 @@ public class UserResource {
 		
 	}
 	
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/jpa/users/{id}")
 	public void deleteUser(@PathVariable int id) {
-		service.deleteById(id);
+		userRepository.deleteById(id);
 	}
 }
