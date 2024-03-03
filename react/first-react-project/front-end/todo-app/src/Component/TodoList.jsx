@@ -1,12 +1,23 @@
+import { useEffect, useState } from "react"
+import { retrieveAllTodosForUsername } from "./api/TodoRestApiService"
+
 export default function TodoList() {
 
     const today = new Date()
     const targetDate = new Date(today.getFullYear() + 12, today.getMonth(), today.getDay())
-    const todos = [
-        { id: 1, description: "Learn Java", done: false, targetDate: targetDate },
-        { id: 2, description: "Learn Spring", done: false, targetDate: targetDate },
-        { id: 3, description: "Learn DevOps", done: false, targetDate: targetDate }
-    ]
+
+    const [todos, setTodos] = useState([]) // 기본 상태는 빈 문자열
+
+    useEffect( // 렌더링 시마다 refreshTodos() 실행하도록
+        () => refreshTodos(), []
+    )
+
+    function refreshTodos() {
+        retrieveAllTodosForUsername('kim')
+            .then(response => setTodos(response.data))
+            .catch((error) => console.log(error))
+            .finally(console.log('clean up'))
+    }
 
     return (
         <div className="container">
@@ -26,7 +37,8 @@ export default function TodoList() {
                                     <tr key={todo.id}>
                                         <td>{todo.id}</td>
                                         <td>{todo.description}</td>
-                                        <td>{todo.targetDate.toDateString()}</td>
+                                        {/* <td>{todo.targetDate.toDateString()}</td> */}
+                                        <td>{todo.targetDate.toString()}</td>
                                         <td>{todo.done.toString()}</td>
                                     </tr>
                                 )
