@@ -18,12 +18,10 @@ export default function LoginComponent() {
     const authContext = useAuth();
 
     function handleUsernameChange(event) {
-        console.log(event.target.value)
         setUsername(event.target.value)
     }
 
     function handlePasswordChange(event) {
-        console.log(event.target.value)
         setPassword(event.target.value)
     }
 
@@ -31,13 +29,11 @@ export default function LoginComponent() {
     function handleSubmit() {
         // 유저네임, 패스워드 일치하는 지 검증하는 컴포넌트 필요
         if (authContext.login(username, password)) {
-            console.log('success');
             setShowErrorMessage(false);
             navigate(`/welcome/${username}`);
         }
         else {
             setShowErrorMessage(true);
-            console.log('failed');
         }
     }
     return (

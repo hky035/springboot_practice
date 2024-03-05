@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react"
-import { deleteTodoApi, retrieveAllTodosForUsernameApi, retriveTodoApi } from "./api/TodoRestApiService"
+import { deleteTodoApi, retrieveAllTodosForUsernameApi } from "./api/TodoRestApiService"
 import { useAuth } from "./security/AuthContext"
 import { useNavigate } from "react-router-dom"
 
 export default function TodoList() {
-
-    const today = new Date()
-    const targetDate = new Date(today.getFullYear() + 12, today.getMonth(), today.getDay())
 
     const [todos, setTodos] = useState([]) // 기본 상태는 빈 문자열
     const [message, setMessage] = useState('')
@@ -38,6 +35,10 @@ export default function TodoList() {
 
     function updateTodo(id) {
         navigate(`/todo/${id}`)
+    }
+
+    function addTodo() {
+        navigate('/todo/-1')
     }
 
     return (
@@ -72,6 +73,9 @@ export default function TodoList() {
                         }
                     </tbody>
                 </table>
+                <div>
+                    <button className="btn btn-success" onClick={addTodo}>ADD TODO</button>
+                </div>
             </div>
         </div>
     )
