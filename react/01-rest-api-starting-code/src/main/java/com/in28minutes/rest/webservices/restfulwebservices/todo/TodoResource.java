@@ -36,13 +36,9 @@ public class TodoResource {
 		return ResponseEntity.noContent().build(); 
 	}
 	
-	
 	@PutMapping("users/{username}/todos/{id}")
 	public Todo updateTodo(@PathVariable String username, @PathVariable int id, @RequestBody Todo todo) {
-		Todo foundTodo = todoService.findById(id);
-		foundTodo.setDescription(todo.getDescription());
-		foundTodo.setTargetDate(todo.getTargetDate());
-		
-		return foundTodo;
+		todoService.updateTodo(todo);
+		return todo;
 	}
 }

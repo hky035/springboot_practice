@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "./security/AuthContext";
-import { retrieveTodoApi } from "./api/TodoRestApiService";
+import { retrieveTodoApi, updateTodoApi } from "./api/TodoRestApiService";
 import { Field, Formik, Form, ErrorMessage } from "formik";
 
 export default function TodoComponent() {
@@ -11,6 +11,8 @@ export default function TodoComponent() {
     const username = authContext.username;
     const [description, setDescription] = useState('')
     const [targetDate, setTargetDate] = useState('')
+
+    const navigate = useNavigate()
 
     useEffect(
         () => retrieveTodo(), [id]
@@ -30,8 +32,20 @@ export default function TodoComponent() {
             )
     }
 
-    function onSubmit() {
+    function onSubmit(values) {
         console.log('btn clicked')
+        const todo = {
+            id: id,
+            username: username,
+            description: values.description, // values는 폼에 입력된 값을 참조하는 객체. 그냥 description을 하면 해당 렌더링 시 description 값인 초기값이 설정되게 됨
+            targetDate: values.targetDate,
+            done: false
+        }
+        updateTodoApi(username, id, todo)
+            .then(response => console.log(response.data))
+            .catch(error => console.log(error))
+
+        navigate(`/todos`)
     }
 
     function validate(values) {
@@ -51,6 +65,7 @@ export default function TodoComponent() {
         console.log(values) // values에 description과 targetDate 입력값이 들어간 객체임을 알 수 있다.
         return errors
     }
+
     return (
         <div className="container">
             <h1>Enter Todo Page</h1>
