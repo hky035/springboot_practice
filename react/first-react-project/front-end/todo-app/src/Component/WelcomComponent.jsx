@@ -27,7 +27,7 @@ export default function WelcomeComponent() {
         <div>
             <h1> Hello, {`${username}`}! Welcome this Page</h1>
             <div>GO TO your <Link to="/todos">To do</Link></div>
-            <button className="btn btn-success" onClick={callHelloWorldRestApi}>Rest API</button>
+            <button className="btn btn-success" onClick={callHelloWorldRestApi}>CALL HelloWorld API</button>
             <div>{message}</div>
         </div>
     )
