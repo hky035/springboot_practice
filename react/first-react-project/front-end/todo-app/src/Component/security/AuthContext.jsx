@@ -9,34 +9,45 @@ export default function AuthProvider({ children }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [username, setUsername] = useState('')
 
-    function login(username, password) {
+    const [token, setToken] = useState(null)
+
+    async function login(username, password) {
         const baToken = 'basic ' + window.btoa(username + ":" + password)
 
-        excuteBasicAuthenticationService(baToken)
-            .then(response => console.log(response))
-            .catch(error => console.log(error))
+        try {
+            const response = await excuteBasicAuthenticationService(baToken)
 
-        setIsAuthenticated(false)
-
-        // if (username === "kim" && password === "this") {
-        //     setIsAuthenticated(true)
-        //     setUsername(username)
-        //     return true;
-        // }
-        // else {
-        //     setIsAuthenticated(false)
-        //     setUsername('')
-        //     return false;
-        // }
+            if (response.status == 200) {
+                setIsAuthenticated(true)
+                setUsername(username)
+                setToken(baToken)
+                return true
+            }
+            else {
+                /* setIsAuthenticated(false)
+                setUsername(null)
+                setToken(null) */
+                logout()
+                return false
+            }
+        } catch (error) {
+            /*  logout()과 동일한 로직이므로 logout()으로 대체
+            setIsAuthenticated(false)
+            setUsername(null)
+            setToken(null) */
+            logout()
+            return false
+        }
     }
 
     function logout() {
         setIsAuthenticated(false)
-        setUsername('')
+        setUsername(null)
+        setToken(null)
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, username }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, username, token }}>
             {children}
         </AuthContext.Provider>
     )

@@ -26,11 +26,11 @@ export default function LoginComponent() {
     }
 
     // 제출 시
-    function handleSubmit() {
+    async function handleSubmit() {
         // 유저네임, 패스워드 일치하는 지 검증하는 컴포넌트 필요
-        if (authContext.login(username, password)) {
-            setShowErrorMessage(false);
-            navigate(`/welcome/${username}`);
+        if (await authContext.login(username, password)) {
+            setShowErrorMessage(false)
+            navigate(`/welcome/${username}`)
         }
         else {
             setShowErrorMessage(true);
