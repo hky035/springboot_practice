@@ -35,7 +35,7 @@ export default function TodoComponent() {
         }
     }
 
-    function onSubmit(values) {
+    async function onSubmit(values) {
         console.log('btn clicked')
         const todo = {
             id: id,
@@ -45,12 +45,12 @@ export default function TodoComponent() {
             done: false
         }
         if (id != -1) {
-            updateTodoApi(username, id, todo)
+            await updateTodoApi(username, id, todo)
                 .then(response => console.log(response.data))
                 .catch(error => console.log(error))
         }
         else {
-            addTodoApi(username, todo)
+            await addTodoApi(username, todo)
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
         }

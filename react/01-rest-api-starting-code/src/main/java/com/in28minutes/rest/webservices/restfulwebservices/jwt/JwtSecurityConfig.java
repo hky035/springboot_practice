@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.security.servlet.AntPathRequestMatcherProvider;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class JwtSecurityConfig {
     	return httpSecurity
         .authorizeHttpRequests(auth -> auth
         		.requestMatchers(new AntPathRequestMatcher("/authenticate")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/h2-console/*")).permitAll() // h2-console is a servlet and NOT recommended for a production
+                .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll() // h2-console is a servlet and NOT recommended for a production // PathRequest.toH2Console()
                 .requestMatchers(new AntPathRequestMatcher("/**", "OPTIONS")).permitAll()
                 .anyRequest()
                 .authenticated())

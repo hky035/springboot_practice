@@ -20,9 +20,9 @@ export default function TodoList() {
     function refreshTodos() {
         console.log(username)
         retrieveAllTodosForUsernameApi(username)
-            .then(response => setTodos(response.data))
+            .then((response) => { setTodos(response.data) })
             .catch((error) => console.log(error))
-            .finally(console.log('clean up'))
+        // .finally(console.log('clean up'))
     }
 
     function deleteTodo(id) {
