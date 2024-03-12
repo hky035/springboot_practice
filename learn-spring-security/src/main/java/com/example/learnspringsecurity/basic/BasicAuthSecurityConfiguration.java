@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
@@ -24,13 +25,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//@Configuration
+@Configuration
+@EnableMethodSecurity(jsr250Enabled=true, securedEnabled=true)
 public class BasicAuthSecurityConfiguration {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(auth -> {
-			auth.anyRequest().authenticated();
+					auth
+						.requestMatchers("/users").hasRole("USER")   // 전역 보안 설정 
+						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.anyRequest().authenticated();
 		});
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 //		http.formLogin(withDefaults());
@@ -54,12 +59,12 @@ public class BasicAuthSecurityConfiguration {
 	public UserDetailsService userDetailsService(DataSource dataSource) {
 		var user = User.withUsername("kim")
 //						.password("{noop}dummy")
-						.password("dummy").passwordEncoder(str -> bcryptPasswordEncoder().encode(str))
+						.password("this").passwordEncoder(str -> bcryptPasswordEncoder().encode(str))
 						.roles("USER")
 						.build();
 		var admin = User.withUsername("admin")
 //						.password("{noop}dummy")
-						.password("dummy").passwordEncoder(str -> bcryptPasswordEncoder().encode(str))
+						.password("this").passwordEncoder(str -> bcryptPasswordEncoder().encode(str))
 						.roles("ADMIN")
 						.build();
 		
