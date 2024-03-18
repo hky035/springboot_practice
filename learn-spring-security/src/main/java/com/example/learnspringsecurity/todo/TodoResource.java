@@ -27,8 +27,8 @@ public class TodoResource {
 	
 	
 	@GetMapping("users/{username}/todos")
-//	@PreAuthorize("hasRole('USER') and #username == authentication.name")
-//	@PostAuthorize("returnObject.username == 'kim'")
+//	@PreAuthorize("hasRole('USER')")
+	@PostAuthorize("returnObject.username == 'kim'")
 	@RolesAllowed({"ADMIN","USER"})
 	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	public Todo retrieveTodo(@PathVariable("username") String username) {

@@ -26,7 +26,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableMethodSecurity(jsr250Enabled=true, securedEnabled=true)
+@EnableMethodSecurity(prePostEnabled = true, jsr250Enabled=true, securedEnabled=true) 
 public class BasicAuthSecurityConfiguration {
 
 	@Bean
